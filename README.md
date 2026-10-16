@@ -9,3 +9,16 @@ para responder perguntas como:
 - Qual combinação de torres gera o melhor custo-benefício?
 - Em qual round as estratégias costumam falhar?
 - Qual estratégia recomendar para um mapa e dificuldade específicos?
+
+## 🗂️ Modelo de dados
+ 
+Os dados do jogo ficam separados dos dados analíticos:
+ 
+**Dados de referência**
+ 
+| Tabela | Descrição |
+|---|---|
+| `torres` | Torres do jogo, categoria e custo base |
+| `upgrades` | Upgrades de cada torre, por caminho e nível, com custo |
+| `bloons` | Tipos de bloons e suas propriedades |
+| `mapas` | Mapas e suas características |
