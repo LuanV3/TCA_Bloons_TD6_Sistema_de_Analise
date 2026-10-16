@@ -22,3 +22,20 @@ Os dados do jogo ficam separados dos dados analíticos:
 | `upgrades` | Upgrades de cada torre, por caminho e nível, com custo |
 | `bloons` | Tipos de bloons e suas propriedades |
 | `mapas` | Mapas e suas características |
+
+**Dados analíticos**
+ 
+| Tabela | Descrição |
+|---|---|
+| `estrategias` | Estratégias cadastradas e as torres/upgrades que as compõem |
+| `partidas` | Partidas jogadas, com mapa, dificuldade, estratégia usada e resultado |
+ 
+## 🛣️ Roadmap
+ 
+- [ ] Modelagem das tabelas de referência
+- [ ] Modelagem de estratégias e partidas
+- [ ] Consultas de análise (ranking de estratégias)
+- [ ] Sistema de recomendação por mapa e dificuldade
+## ⚠️ Aviso
+ 
+Projeto não oficial, sem vínculo com a Ninja Kiwi. Bloons TD 6 é marca da Ninja Kiwi.
