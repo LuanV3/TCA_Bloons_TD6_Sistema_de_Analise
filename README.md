@@ -39,8 +39,8 @@ Os dados do jogo ficam separados dos dados analíticos.
 - [x] Modelagem de estratégias e partidas
 - [x] Criação das tabelas no Supabase
 - [x] Regras de validação (`CHECK`, `UNIQUE`)
-- [ ] Cadastro das torres e dos heróis
-- [ ] Função de custo por dificuldade
+- [x] Cadastro das torres e dos heróis
+- [x] Função de custo por dificuldade
 - [ ] Cadastro dos mapas e dos bloons
 - [ ] Cadastro dos upgrades
 - [ ] Cadastro de estratégias e partidas de teste
