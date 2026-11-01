@@ -4,114 +4,107 @@
 
 -- VALIDAÇÕES: DADOS DE REFERÊNCIA
 
-alter table torres
-add constraint torres_custo_base_ck check (custo_base >= 0),
-add constraint torres_alcance_ck check (
-    alcance_base is null
-    or alcance_base >= 0
-);
+ALTER TABLE torres
+  ADD CONSTRAINT torres_custo_base_ck CHECK (custo_base >= 0),
+  ADD CONSTRAINT torres_alcance_ck CHECK (
+    alcance_base IS NULL OR alcance_base >= 0
+  );
 
-alter table upgrades
-add constraint upgrades_nivel_ck check (nivel between 1 and 5),
-add constraint upgrades_custo_ck check (custo >= 0);
+ALTER TABLE upgrades
+  ADD CONSTRAINT upgrades_nivel_ck CHECK (nivel BETWEEN 1 AND 5),
+  ADD CONSTRAINT upgrades_custo_ck CHECK (custo >= 0);
 
-alter table herois
-add constraint herois_custo_base_ck check (custo_base >= 0);
+ALTER TABLE herois
+  ADD CONSTRAINT herois_custo_base_ck CHECK (custo_base >= 0);
 
-alter table bloons
-add constraint bloons_vida_ck check (vida >= 0),
-add constraint bloons_filhos_ck check (
-    filhos_gerados is null
-    or filhos_gerados >= 0
-);
+ALTER TABLE bloons
+  ADD CONSTRAINT bloons_vida_ck CHECK (vida >= 0),
+  ADD CONSTRAINT bloons_filhos_ck CHECK (
+    filhos_gerados IS NULL OR filhos_gerados >= 0
+  );
 
-alter table mapas
-add constraint mapas_caminhos_ck check (numero_caminhos >= 1);
+ALTER TABLE mapas
+  ADD CONSTRAINT mapas_caminhos_ck CHECK (numero_caminhos >= 1);
 
 -- VALIDAÇÕES: ESTRATÉGIAS
 
-alter table estrategias
-add constraint estrategias_round_alvo_ck check (
-    round_alvo is null
-    or round_alvo >= 1
-),
-add constraint estrategias_custo_ck check (
-    custo_total_estimado is null
-    or custo_total_estimado >= 0
-),
--- CHIMPS só existe na dificuldade Impopível
-add constraint estrategias_chimps_ck check (
-    modo_alvo is distinct from 'impopivel_chimps'
-    or dificuldade_alvo = 'impopivel'
-);
+ALTER TABLE estrategias
+  ADD CONSTRAINT estrategias_round_alvo_ck CHECK (
+    round_alvo IS NULL OR round_alvo >= 1
+  ),
+  ADD CONSTRAINT estrategias_custo_ck CHECK (
+    custo_total_estimado IS NULL OR custo_total_estimado >= 0
+  ),
+  -- CHIMPS só existe na dificuldade Impopível
+  ADD CONSTRAINT estrategias_chimps_ck CHECK (
+    modo_alvo IS DISTINCT FROM 'impopivel_chimps'
+    OR dificuldade_alvo = 'impopivel'
+  );
 
-alter table estrategia_torres
-add constraint estrategia_torres_quantidade_ck check (quantidade >= 1),
-add constraint estrategia_torres_round_ck check (
-    round_colocacao is null
-    or round_colocacao >= 1
-),
--- cada caminho vai de 0 a 5
-add constraint estrategia_torres_niveis_ck check (
-    upgrade_caminho_1 between 0 and 5
-    and upgrade_caminho_2 between 0 and 5
-    and upgrade_caminho_3 between 0 and 5
-),
--- regra do jogo: no máximo 1 caminho acima de 2 e no máximo 2 caminhos usados
-add constraint estrategia_torres_regra_jogo_ck check (
+ALTER TABLE estrategia_torres
+  ADD CONSTRAINT estrategia_torres_quantidade_ck CHECK (quantidade >= 1),
+  ADD CONSTRAINT estrategia_torres_round_ck CHECK (
+    round_colocacao IS NULL OR round_colocacao >= 1
+  ),
+  -- cada caminho vai de 0 a 5
+  ADD CONSTRAINT estrategia_torres_niveis_ck CHECK (
+    upgrade_caminho_1 BETWEEN 0 AND 5
+    AND upgrade_caminho_2 BETWEEN 0 AND 5
+    AND upgrade_caminho_3 BETWEEN 0 AND 5
+  ),
+  -- regra do jogo: no máximo 1 caminho acima de 2 e no máximo 2 caminhos usados
+  ADD CONSTRAINT estrategia_torres_regra_jogo_ck CHECK (
     (upgrade_caminho_1 > 2)::int + (upgrade_caminho_2 > 2)::int + (upgrade_caminho_3 > 2)::int <= 1
-    and (upgrade_caminho_1 > 0)::int + (upgrade_caminho_2 > 0)::int + (upgrade_caminho_3 > 0)::int <= 2
-);
+    AND (upgrade_caminho_1 > 0)::int + (upgrade_caminho_2 > 0)::int + (upgrade_caminho_3 > 0)::int <= 2
+  );
 
 -- sem duas torres com a mesma ordem de colocação na mesma estratégia
-create unique index estrategia_torres_ordem_uq on estrategia_torres (estrategia_id, ordem);
+CREATE UNIQUE INDEX estrategia_torres_ordem_uq
+ON estrategia_torres (estrategia_id, ordem);
 
 -- VALIDAÇÕES: PARTIDAS
 
-alter table partidas
-add constraint partidas_round_inicial_ck check (round_inicial >= 1),
-add constraint partidas_round_final_ck check (round_final >= round_inicial),
-add constraint partidas_vidas_ck check (
-    vidas_restantes is null
-    or vidas_restantes >= 0
-),
-add constraint partidas_dinheiro_ck check (
-    dinheiro_final is null
-    or dinheiro_final >= 0
-),
-add constraint partidas_duracao_ck check (
-    duracao_segundos is null
-    or duracao_segundos >= 0
-),
-add constraint partidas_chimps_ck check (
+ALTER TABLE partidas
+  ADD CONSTRAINT partidas_round_inicial_ck CHECK (round_inicial >= 1),
+  ADD CONSTRAINT partidas_round_final_ck CHECK (round_final >= round_inicial),
+  ADD CONSTRAINT partidas_vidas_ck CHECK (
+    vidas_restantes IS NULL OR vidas_restantes >= 0
+  ),
+  ADD CONSTRAINT partidas_dinheiro_ck CHECK (
+    dinheiro_final IS NULL OR dinheiro_final >= 0
+  ),
+  ADD CONSTRAINT partidas_duracao_ck CHECK (
+    duracao_segundos IS NULL OR duracao_segundos >= 0
+  ),
+  ADD CONSTRAINT partidas_chimps_ck CHECK (
     modo <> 'impopivel_chimps'
-    or dificuldade = 'impopivel'
-);
+    OR dificuldade = 'impopivel'
+  );
 
-alter table partida_falhas
-add constraint partida_falhas_round_ck check (round_falha >= 1),
-add constraint partida_falhas_vidas_ck check (
-    vidas_perdidas is null
-    or vidas_perdidas >= 0
-);
+ALTER TABLE partida_falhas
+  ADD CONSTRAINT partida_falhas_round_ck CHECK (round_falha >= 1),
+  ADD CONSTRAINT partida_falhas_vidas_ck CHECK (
+    vidas_perdidas IS NULL OR vidas_perdidas >= 0
+  );
 
 -- VALIDAÇÕES: RECOMENDAÇÕES
 
-alter table recomendacoes
-add constraint recomendacoes_posicao_ck check (posicao_ranking >= 1),
-add constraint recomendacoes_taxa_ck check (
-    taxa_vitoria between 0 and 100
-),
-add constraint recomendacoes_total_ck check (total_partidas >= 1),
-add constraint recomendacoes_chimps_ck check (
+ALTER TABLE recomendacoes
+  ADD CONSTRAINT recomendacoes_posicao_ck CHECK (posicao_ranking >= 1),
+  ADD CONSTRAINT recomendacoes_taxa_ck CHECK (
+    taxa_vitoria BETWEEN 0 AND 100
+  ),
+  ADD CONSTRAINT recomendacoes_total_ck CHECK (total_partidas >= 1),
+  ADD CONSTRAINT recomendacoes_chimps_ck CHECK (
     modo <> 'impopivel_chimps'
-    or dificuldade = 'impopivel'
-);
+    OR dificuldade = 'impopivel'
+  );
 
 -- a mesma estratégia não aparece duas vezes no ranking do mesmo cenário
-create unique index recomendacoes_cenario_estrategia_uq on recomendacoes (
-    mapa_id,
-    dificuldade,
-    modo,
-    estrategia_id
+CREATE UNIQUE INDEX recomendacoes_cenario_estrategia_uq
+ON recomendacoes (
+  mapa_id,
+  dificuldade,
+  modo,
+  estrategia_id
 );

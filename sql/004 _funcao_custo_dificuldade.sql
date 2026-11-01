@@ -2,7 +2,7 @@
 -- função que calcula o custo em cada dificuldade
 -- O banco guarda só o custo na dificuldade Médio (custo_base / custo).
 -- Esta função aplica o multiplicador da dificuldade e arredonda para múltiplo de 5:
---   facil 0,85 | medio 1,00 | dificil 1,08 | impopivel 1,20
+-- facil 0,85 | medio 1,00 | dificil 1,08 | impopivel 1,20
 -- O arredondamento é "para o par" nos empates (ex.: 722,5 -> 720; 297,5 -> 300),
 -- que foi o que reproduziu os valores da wiki.
 -- Conferido contra 44 itens da wiki (torres e heróis): 42 batem nas 4 dificuldades.
