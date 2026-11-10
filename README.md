@@ -41,7 +41,7 @@ Os dados do jogo ficam separados dos dados analíticos.
 - [x] Regras de validação (`CHECK`, `UNIQUE`)
 - [x] Cadastro das torres e dos heróis
 - [x] Função de custo por dificuldade
-- [ ] Cadastro dos mapas e dos bloons
+- [x] Cadastro dos mapas e dos bloons
 - [ ] Cadastro dos upgrades
 - [ ] Cadastro de estratégias e partidas de teste
 - [ ] Consultas de análise (ranking de estratégias, rounds de falha)
