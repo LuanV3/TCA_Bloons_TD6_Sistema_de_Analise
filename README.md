@@ -1,4 +1,4 @@
-# 🎈 Sistema de Análise Bloons TD6
+# Sistema de Análise Bloons TD6
 
 Banco de dados para o jogo **Bloons TD 6** que **analisa partidas e recomenda as estratégias
 mais eficientes**, em vez de apenas catalogar informações do jogo. Ele registra **partidas reais**
@@ -9,7 +9,7 @@ e cruza esses resultados com as estratégias usadas para responder perguntas com
 - Em qual round as estratégias costumam falhar?
 - Qual estratégia recomendar para um mapa e dificuldade específicos?
 
-## 🗂️ Modelo de dados
+## Modelo de dados
 
 Os dados do jogo ficam separados dos dados analíticos.
 
@@ -33,7 +33,7 @@ Os dados do jogo ficam separados dos dados analíticos.
 | `partida_falhas` | Onde e por que a estratégia falhou em cada partida |
 | `recomendacoes` | Ranking pré-calculado de estratégias por mapa, dificuldade e modo |
 
-## 🛣️ Roadmap
+## Roadmap
 
 - [x] Modelagem das tabelas de referência
 - [x] Modelagem de estratégias e partidas
@@ -42,12 +42,12 @@ Os dados do jogo ficam separados dos dados analíticos.
 - [x] Cadastro das torres e dos heróis
 - [x] Função de custo por dificuldade
 - [x] Cadastro dos mapas e dos bloons
-- [ ] Cadastro dos upgrades
+- [/] Cadastro dos upgrades
 - [ ] Cadastro de estratégias e partidas de teste
 - [ ] Consultas de análise (ranking de estratégias, rounds de falha)
 - [ ] Sistema de recomendação por mapa e dificuldade
 - [ ] Interface para registrar partidas
 
-## ⚠️ Aviso
+## Aviso
 
 Projeto não oficial, sem vínculo com a Ninja Kiwi. Bloons TD 6 é marca da Ninja Kiwi.
