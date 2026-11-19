@@ -42,7 +42,7 @@ Os dados do jogo ficam separados dos dados analíticos.
 - [x] Cadastro das torres e dos heróis
 - [x] Função de custo por dificuldade
 - [x] Cadastro dos mapas e dos bloons
-- [ ] Cadastro dos upgrades
+- [x] Cadastro dos upgrades
 - [ ] Cadastro de estratégias e partidas de teste
 - [ ] Consultas de análise (ranking de estratégias, rounds de falha)
 - [ ] Sistema de recomendação por mapa e dificuldade

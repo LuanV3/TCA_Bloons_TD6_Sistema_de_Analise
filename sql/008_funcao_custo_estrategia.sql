@@ -52,3 +52,20 @@ as '
   )::int
   from est
 ';
+
+COMMENT ON FUNCTION custo_estrategia(int, dificuldade) IS
+  'Custo total de uma estratégia (torres + upgrades + herói) na dificuldade informada.';
+
+-- custo nas 4 dificuldades
+create or replace view estrategia_custos as
+select
+  e.id as estrategia_id,
+  e.nome,
+  custo_estrategia(e.id, 'facil')     as custo_facil,
+  custo_estrategia(e.id, 'medio')     as custo_medio,
+  custo_estrategia(e.id, 'dificil')   as custo_dificil,
+  custo_estrategia(e.id, 'impopivel') as custo_impopivel
+from estrategias e;
+
+COMMENT ON VIEW estrategia_custos IS
+  'Custo de cada estratégia nas quatro dificuldades.';
