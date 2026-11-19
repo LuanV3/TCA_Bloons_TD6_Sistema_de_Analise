@@ -386,3 +386,77 @@ from (
     ('Skywarden', 'caminho_3', 3, 'Coldchain', 1500),
     ('Skywarden', 'caminho_3', 4, 'Frozen Verdict', 3900),
     ('Skywarden', 'caminho_3', 5, 'Winter''s Mercy', 20000),
+
+
+    -- Banana Farm
+    ('Banana Farm', 'caminho_1', 1, 'Increased Production', 500),
+    ('Banana Farm', 'caminho_1', 2, 'Greater Production', 600),
+    ('Banana Farm', 'caminho_1', 3, 'Banana Plantation', 3000),
+    ('Banana Farm', 'caminho_1', 4, 'Banana Research Facility', 19000),
+    ('Banana Farm', 'caminho_1', 5, 'Banana Central', 115000),
+    ('Banana Farm', 'caminho_2', 1, 'Long Life Bananas', 300),
+    ('Banana Farm', 'caminho_2', 2, 'Valuable Bananas', 800),
+    ('Banana Farm', 'caminho_2', 3, 'Monkey Bank', 3650),
+    ('Banana Farm', 'caminho_2', 4, 'IMF Loan', 7200),
+    ('Banana Farm', 'caminho_2', 5, 'Monkey-Nomics', 100000),
+    ('Banana Farm', 'caminho_3', 1, 'EZ Collect', 250),
+    ('Banana Farm', 'caminho_3', 2, 'Banana Salvage', 400),
+    ('Banana Farm', 'caminho_3', 3, 'Marketplace', 2700),
+    ('Banana Farm', 'caminho_3', 4, 'Central Market', 15000),
+    ('Banana Farm', 'caminho_3', 5, 'Monkey Wall Street', 70000),
+
+    -- Monkey Village
+    ('Monkey Village', 'caminho_1', 1, 'Bigger Radius', 400),
+    ('Monkey Village', 'caminho_1', 2, 'Jungle Drums', 1500),
+    ('Monkey Village', 'caminho_1', 3, 'Primary Training', 800),
+    ('Monkey Village', 'caminho_1', 4, 'Primary Mentoring', 2500),
+    ('Monkey Village', 'caminho_1', 5, 'Primary Expertise', 25000),
+    ('Monkey Village', 'caminho_2', 1, 'Grow Blocker', 250),
+    ('Monkey Village', 'caminho_2', 2, 'Radar Scanner', 2000),
+    ('Monkey Village', 'caminho_2', 3, 'Monkey Intelligence Bureau', 7500),
+    ('Monkey Village', 'caminho_2', 4, 'Call to Arms', 20000),
+    ('Monkey Village', 'caminho_2', 5, 'Homeland Defense', 40000),
+    ('Monkey Village', 'caminho_3', 1, 'Monkey Business', 500),
+    ('Monkey Village', 'caminho_3', 2, 'Monkey Commerce', 500),
+    ('Monkey Village', 'caminho_3', 3, 'Monkey Town', 10000),
+    ('Monkey Village', 'caminho_3', 4, 'Monkey City', 3000),
+    ('Monkey Village', 'caminho_3', 5, 'Monkeyopolis', 5000),
+
+    -- Engineer Monkey
+    ('Engineer Monkey', 'caminho_1', 1, 'Sentry Gun', 500),
+    ('Engineer Monkey', 'caminho_1', 2, 'Faster Engineering', 400),
+    ('Engineer Monkey', 'caminho_1', 3, 'Sprockets', 575),
+    ('Engineer Monkey', 'caminho_1', 4, 'Sentry Expert', 2500),
+    ('Engineer Monkey', 'caminho_1', 5, 'Sentry Champion', 32000),
+    ('Engineer Monkey', 'caminho_2', 1, 'Larger Service Area', 250),
+    ('Engineer Monkey', 'caminho_2', 2, 'Deconstruction', 350),
+    ('Engineer Monkey', 'caminho_2', 3, 'Cleansing Foam', 900),
+    ('Engineer Monkey', 'caminho_2', 4, 'Overclock', 13500),
+    ('Engineer Monkey', 'caminho_2', 5, 'Ultraboost', 72000),
+    ('Engineer Monkey', 'caminho_3', 1, 'Oversize Nails', 450),
+    ('Engineer Monkey', 'caminho_3', 2, 'Pin', 220),
+    ('Engineer Monkey', 'caminho_3', 3, 'Double Gun', 450),
+    ('Engineer Monkey', 'caminho_3', 4, 'Bloon Trap', 3600),
+    ('Engineer Monkey', 'caminho_3', 5, 'XXXL Trap', 45000),
+
+    -- Beast Handler
+    ('Beast Handler', 'caminho_1', 1, 'Piranha', 160),
+    ('Beast Handler', 'caminho_1', 2, 'Barracuda', 810),
+    ('Beast Handler', 'caminho_1', 3, 'Great White', 2010),
+    ('Beast Handler', 'caminho_1', 4, 'Orca', 12500),
+    ('Beast Handler', 'caminho_1', 5, 'Megalodon', 45000),
+    ('Beast Handler', 'caminho_2', 1, 'Microraptor', 175),
+    ('Beast Handler', 'caminho_2', 2, 'Adasaurus', 830),
+    ('Beast Handler', 'caminho_2', 3, 'Velociraptor', 2065),
+    ('Beast Handler', 'caminho_2', 4, 'Tyrannosaurus Rex', 9500),
+    ('Beast Handler', 'caminho_2', 5, 'Giganotosaurus', 60000),
+    ('Beast Handler', 'caminho_3', 1, 'Gyrfalcon', 190),
+    ('Beast Handler', 'caminho_3', 2, 'Horned Owl', 860),
+    ('Beast Handler', 'caminho_3', 3, 'Golden Eagle', 2120),
+    ('Beast Handler', 'caminho_3', 4, 'Giant Condor', 9000),
+    ('Beast Handler', 'caminho_3', 5, 'Pouākai', 30000)
+) as v(torre, caminho, nivel, nome, custo)
+join torres t on t.nome = v.torre
+on conflict (torre_id, caminho, nivel) do update set
+  nome  = excluded.nome,
+  custo = excluded.custo;
