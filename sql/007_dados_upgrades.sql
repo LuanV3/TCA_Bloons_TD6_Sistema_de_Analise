@@ -183,10 +183,10 @@ from (
     ('Super Monkey', 'caminho_3', 4, 'Dark Champion', 55555),
     ('Super Monkey', 'caminho_3', 5, 'Legend of the Night', 165650),
 
--- Spike Factory
+    -- Spike Factory
     ('Spike Factory', 'caminho_1', 1, 'Bigger Stacks', 800),
     ('Spike Factory', 'caminho_1', 2, 'White Hot Spikes', 600),
-    ('Spike Factory', 'caminho_1', 3, 'Spiked Balls', 2300,
+    ('Spike Factory', 'caminho_1', 3, 'Spiked Balls', 2300),
     ('Spike Factory', 'caminho_1', 4, 'Spiked Mines', 9500),
     ('Spike Factory', 'caminho_1', 5, 'Super Mines', 125000),
     ('Spike Factory', 'caminho_2', 1, 'Faster Production', 600),
@@ -200,9 +200,8 @@ from (
     ('Spike Factory', 'caminho_3', 4, 'Deadly Spikes', 3600),
     ('Spike Factory', 'caminho_3', 5, 'Perma-Spike', 30000),
 
-
     -- Monkey Sub
-    ('Monkey Sub', 'caminho_1', 1, 'Longe Range', 130),
+    ('Monkey Sub', 'caminho_1', 1, 'Longer Range', 130),
     ('Monkey Sub', 'caminho_1', 2, 'Advanced Intel', 500),
     ('Monkey Sub', 'caminho_1', 3, 'Submerge and Support', 700),
     ('Monkey Sub', 'caminho_1', 4, 'Bloontonium Reactor', 2400),
@@ -215,7 +214,7 @@ from (
     ('Monkey Sub', 'caminho_3', 1, 'Twin Guns', 450),
     ('Monkey Sub', 'caminho_3', 2, 'Airburst Darts', 1000),
     ('Monkey Sub', 'caminho_3', 3, 'Triple Guns', 1100),
-    ('Monkey Sub', 'caminho_3', 4, 'Armor Piecing Darts', 2500),
+    ('Monkey Sub', 'caminho_3', 4, 'Armor Piercing Darts', 2500),
     ('Monkey Sub', 'caminho_3', 5, 'Sub Commander', 25000),
 
     -- Monkey Buccaneer
@@ -268,3 +267,54 @@ from (
     ('Heli Pilot', 'caminho_3', 3, 'MOAB Shove', 3400),
     ('Heli Pilot', 'caminho_3', 4, 'Comanche Defense', 8500),
     ('Heli Pilot', 'caminho_3', 5, 'Comanche Commander', 35000),
+    
+    -- Mortar Monkey
+    ('Mortar Monkey', 'caminho_1', 1, 'Bigger Blast', 300),
+    ('Mortar Monkey', 'caminho_1', 2, 'Bloon Buster', 500),
+    ('Mortar Monkey', 'caminho_1', 3, 'Shell Shock', 825),
+    ('Mortar Monkey', 'caminho_1', 4, 'The Big One', 7000),
+    ('Mortar Monkey', 'caminho_1', 5, 'The Biggest One', 36000),
+    ('Mortar Monkey', 'caminho_2', 1, 'Faster Reload', 400),
+    ('Mortar Monkey', 'caminho_2', 2, 'Rapid Reload', 500),
+    ('Mortar Monkey', 'caminho_2', 3, 'Heavy Shells', 900),
+    ('Mortar Monkey', 'caminho_2', 4, 'Artillery Battery', 6500),
+    ('Mortar Monkey', 'caminho_2', 5, 'Pop and Awe', 38000),
+    ('Mortar Monkey', 'caminho_3', 1, 'Increased Accuracy', 200),
+    ('Mortar Monkey', 'caminho_3', 2, 'Burny Stuff', 400),
+    ('Mortar Monkey', 'caminho_3', 3, 'Signal Flare', 1100),
+    ('Mortar Monkey', 'caminho_3', 4, 'Shattering Shells', 9500),
+    ('Mortar Monkey', 'caminho_3', 5, 'Blooncineration', 40000),
+
+    -- Dartling Gunner
+    ('Dartling Gunner', 'caminho_1', 1, 'Focused Firing', 300),
+    ('Dartling Gunner', 'caminho_1', 2, 'Laser Shock', 900),
+    ('Dartling Gunner', 'caminho_1', 3, 'Laser Cannon', 3000),
+    ('Dartling Gunner', 'caminho_1', 4, 'Plasma Accelerator', 11750),
+    ('Dartling Gunner', 'caminho_1', 5, 'Ray of Doom', 75000),
+    ('Dartling Gunner', 'caminho_2', 1, 'Advanced Targeting', 250),
+    ('Dartling Gunner', 'caminho_2', 2, 'Faster Barrel Spin', 950),
+    ('Dartling Gunner', 'caminho_2', 3, 'Hydra Rocket Pods', 4500),
+    ('Dartling Gunner', 'caminho_2', 4, 'Rocket Storm', 5000),
+    ('Dartling Gunner', 'caminho_2', 5, 'M.A.D', 65000),
+    ('Dartling Gunner', 'caminho_3', 1, 'Faster Swivel', 150),
+    ('Dartling Gunner', 'caminho_3', 2, 'Powerful Darts', 1200),
+    ('Dartling Gunner', 'caminho_3', 3, 'Buckshot', 3000),
+    ('Dartling Gunner', 'caminho_3', 4, 'Bloon Area Denial System', 12000),
+    ('Dartling Gunner', 'caminho_3', 5, 'Bloon Exclusion Zone', 58000),
+
+    -- Ninja Monkey
+    ('Ninja Monkey', 'caminho_1', 1, 'Ninja Discipline', 350),
+    ('Ninja Monkey', 'caminho_1', 2, 'Sharp Shurikens', 350),
+    ('Ninja Monkey', 'caminho_1', 3, 'Double Shot', 900),
+    ('Ninja Monkey', 'caminho_1', 4, 'Bloonjitsu', 2750),
+    ('Ninja Monkey', 'caminho_1', 5, 'Grandmaster Ninja', 35000),
+    ('Ninja Monkey', 'caminho_2', 1, 'Distraction', 250),
+    ('Ninja Monkey', 'caminho_2', 2, 'Counter-Espionage', 400),
+    ('Ninja Monkey', 'caminho_2', 3, 'Shinobi Tactics', 1200),
+    ('Ninja Monkey', 'caminho_2', 4, 'Bloon Sabotage', 5200),
+    ('Ninja Monkey', 'caminho_2', 5, 'Grand Saboteur', 22000),
+    ('Ninja Monkey', 'caminho_3', 1, 'Seeking Shuriken', 300),
+    ('Ninja Monkey', 'caminho_3', 2, 'Caltrops', 450),
+    ('Ninja Monkey', 'caminho_3', 3, 'Flash Bomb', 2250),
+    ('Ninja Monkey', 'caminho_3', 4, 'Sticky Bomb', 5000),
+    ('Ninja Monkey', 'caminho_3', 5, 'Master Bomber', 40000),
