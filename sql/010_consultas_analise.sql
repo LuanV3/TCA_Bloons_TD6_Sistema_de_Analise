@@ -181,3 +181,69 @@ join torres t1 on t1.id = x1.torre_id
 join torres t2 on t2.id = x2.torre_id
 join partidas p on p.estrategia_id = x1.estrategia_id
 group by t1.nome, t2.nome;
+
+COMMENT ON VIEW analise_pares_torres IS
+  'Taxa de vitória por par de torres que aparecem juntas na mesma estratégia.';
+
+-- 8. RANKING DE ESTRATÉGIAS PARA UM CENÁRIO
+-- Ordena por taxa de vitória, depois por nº de partidas, depois por custo-benefício.
+-- p_min_partidas evita que 1 vitória em 1 partida vire "100%" no topo.
+-- Exemplo: select * from ranking_estrategias('Monkey Meadow', 'medio');
+
+create or replace function ranking_estrategias(
+  p_mapa          text,
+  p_dificuldade   dificuldade,
+  p_modo          modo_jogo default 'padrao',
+  p_min_partidas  int       default 1
+)
+returns table (
+  posicao             int,
+  estrategia_id       int,
+  estrategia          text,
+  partidas_concluidas int,
+  vitorias            int,
+  taxa_vitoria        numeric,
+  round_medio_derrota numeric,
+  custo               int,
+  custo_beneficio     numeric
+)
+language sql
+stable
+as '
+  select
+    row_number() over (
+      order by v.taxa_vitoria desc nulls last,
+               v.partidas_concluidas desc,
+               v.custo_beneficio desc nulls last,
+               v.estrategia
+    )::int,
+    v.estrategia_id,
+    v.estrategia::text,
+    v.partidas_concluidas,
+    v.vitorias,
+    v.taxa_vitoria,
+    v.round_medio_derrota,
+    v.custo,
+    v.custo_beneficio
+  from analise_estrategia_cenario v
+  where lower(v.mapa) = lower(p_mapa)
+    and v.dificuldade = p_dificuldade
+    and v.modo = p_modo
+    and v.partidas_concluidas >= p_min_partidas
+  order by 1
+';
+
+COMMENT ON FUNCTION ranking_estrategias(text, dificuldade, modo_jogo, int) IS
+  'Ranking de estratégias para um mapa, dificuldade e modo, com mínimo de partidas.';
+
+-- EXEMPLOS (rodar um por vez)
+-- select * from analise_estrategia_cenario order by mapa, dificuldade, taxa_vitoria desc;
+-- select * from analise_estrategia_geral order by taxa_vitoria desc;
+-- select * from analise_rounds_falha;
+-- select * from analise_falhas_faixa_round;
+-- select * from analise_falhas_por_bloon;
+-- select * from analise_falhas_por_estrategia;
+-- select * from analise_torres order by taxa_vitoria desc;
+-- select * from analise_pares_torres order by taxa_vitoria desc, partidas_concluidas desc;
+-- select * from ranking_estrategias('Monkey Meadow', 'medio');
+-- select * from ranking_estrategias('Logs', 'impopivel', 'impopivel_chimps');
