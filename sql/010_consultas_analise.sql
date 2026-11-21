@@ -113,3 +113,71 @@ from partida_falhas f
 left join bloons b on b.id = f.bloon_causador_id
 group by b.nome, b.tipo, b.resistencia
 order by falhas desc, bloon;
+
+COMMENT ON VIEW analise_falhas_por_bloon IS
+  'Bloons que mais furam a defesa, com o round médio em que isso acontece.';
+
+-- 5. ONDE CADA ESTRATÉGIA FALHA, COMPARADO COM O ROUND ALVO
+
+create or replace view analise_falhas_por_estrategia as
+select
+  e.id   as estrategia_id,
+  e.nome as estrategia,
+  e.round_alvo,
+  count(*)::int as falhas,
+  round(avg(f.round_falha)::numeric, 2) as round_medio_falha,
+  mode() within group (order by f.round_falha) as round_mais_comum,
+  round(e.round_alvo - avg(f.round_falha)::numeric, 2) as rounds_ate_o_alvo
+from partida_falhas f
+join partidas p    on p.id = f.partida_id
+join estrategias e on e.id = p.estrategia_id
+group by e.id, e.nome, e.round_alvo;
+
+COMMENT ON VIEW analise_falhas_por_estrategia IS
+  'Round médio e mais comum de falha de cada estratégia e quantos rounds faltaram para o alvo.';
+
+-- 6. DESEMPENHO DE CADA TORRE
+-- Responde: "quais torres aparecem nas estratégias que mais vencem?"
+-- Cada torre conta uma vez por partida da estratégia (mesmo que apareça em mais de uma linha).
+
+create or replace view analise_torres as
+select
+  t.id   as torre_id,
+  t.nome as torre,
+  t.categoria,
+  count(distinct x.estrategia_id)::int as estrategias,
+  count(p.id) filter (where p.resultado <> 'abandonada')::int as partidas_concluidas,
+  count(p.id) filter (where p.resultado = 'vitoria')::int     as vitorias,
+  round(
+    100.0 * count(p.id) filter (where p.resultado = 'vitoria')
+    / nullif(count(p.id) filter (where p.resultado <> 'abandonada'), 0), 2
+  ) as taxa_vitoria
+from torres t
+join (select distinct estrategia_id, torre_id from estrategia_torres) x on x.torre_id = t.id
+join partidas p on p.estrategia_id = x.estrategia_id
+group by t.id, t.nome, t.categoria;
+
+COMMENT ON VIEW analise_torres IS
+  'Taxa de vitória das partidas em que a torre fazia parte da estratégia. Não isola o efeito da torre: as outras torres da estratégia também contam.';
+
+-- 7. COMBINAÇÕES DE DUAS TORRES
+-- Responde: "qual combinação de torres gera o melhor resultado?"
+
+create or replace view analise_pares_torres as
+select
+  t1.nome as torre_a,
+  t2.nome as torre_b,
+  count(distinct x1.estrategia_id)::int as estrategias,
+  count(p.id) filter (where p.resultado <> 'abandonada')::int as partidas_concluidas,
+  count(p.id) filter (where p.resultado = 'vitoria')::int     as vitorias,
+  round(
+    100.0 * count(p.id) filter (where p.resultado = 'vitoria')
+    / nullif(count(p.id) filter (where p.resultado <> 'abandonada'), 0), 2
+  ) as taxa_vitoria
+from (select distinct estrategia_id, torre_id from estrategia_torres) x1
+join (select distinct estrategia_id, torre_id from estrategia_torres) x2
+  on x2.estrategia_id = x1.estrategia_id and x2.torre_id > x1.torre_id
+join torres t1 on t1.id = x1.torre_id
+join torres t2 on t2.id = x2.torre_id
+join partidas p on p.estrategia_id = x1.estrategia_id
+group by t1.nome, t2.nome;
