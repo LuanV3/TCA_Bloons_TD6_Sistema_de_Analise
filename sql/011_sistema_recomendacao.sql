@@ -102,3 +102,32 @@ returns table (
   custo               int,
   custo_beneficio     numeric
 )
+language sql
+stable
+as '
+  select
+    d.posicao_ranking,
+    d.estrategia::text,
+    d.heroi::text,
+    d.taxa_vitoria,
+    d.total_partidas,
+    d.round_medio_derrota,
+    d.custo,
+    d.custo_beneficio
+  from recomendacoes_detalhe d
+  where lower(d.mapa) = lower(p_mapa)
+    and d.dificuldade = p_dificuldade
+    and d.modo = p_modo
+  order by d.posicao_ranking
+  limit p_limite
+';
+
+COMMENT ON FUNCTION recomendar_estrategia(text, dificuldade, modo_jogo, int) IS
+  'Melhores estratégias já ranqueadas para um mapa, dificuldade e modo.';
+
+-- EXEMPLOS (rodar um por vez)
+-- select recalcular_recomendacoes();  -- usa os padrões (mín. 1, top 5)
+-- select recalcular_recomendacoes(3, 3);  -- mín. 3 partidas, top 3
+-- select * from recomendacoes_detalhe order by mapa, dificuldade, posicao_ranking;
+-- select * from recomendar_estrategia('Monkey Meadow', 'medio');
+-- select * from recomendar_estrategia('Logs', 'impopivel', 'impopivel_chimps', 1);
