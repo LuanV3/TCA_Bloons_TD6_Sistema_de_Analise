@@ -61,3 +61,61 @@ begin
   if v_tem_falha and p_resultado <> ''derrota'' then
     raise exception ''Dados de falha só podem ser informados para resultado derrota (resultado informado: %)'', p_resultado;
   end if;
+
+  if p_falha_bloon is not null then
+    select id into v_bloon_id from bloons where lower(nome) = lower(p_falha_bloon);
+    if v_bloon_id is null then
+      raise exception ''Bloon não encontrado: %'', p_falha_bloon;
+    end if;
+  end if;
+
+  v_round_ini := coalesce(
+    p_round_inicial,
+    case p_dificuldade
+      when ''facil''     then 1
+      when ''medio''     then 1
+      when ''dificil''   then 3
+      when ''impopivel'' then 6
+    end
+  );
+
+  insert into partidas
+    (mapa_id, estrategia_id, dificuldade, modo, resultado,
+     round_inicial, round_final, vidas_restantes, dinheiro_final,
+     duracao_segundos, jogador, observacoes)
+  values
+    (v_mapa_id, v_estrategia_id, p_dificuldade, p_modo, p_resultado,
+     v_round_ini, p_round_final, p_vidas, p_dinheiro,
+     p_duracao, p_jogador, p_observacoes)
+  returning id into v_partida_id;
+
+  if v_tem_falha then
+    insert into partida_falhas
+      (partida_id, round_falha, bloon_causador_id, vidas_perdidas, motivo)
+    values
+      (v_partida_id, coalesce(p_falha_round, p_round_final), v_bloon_id,
+       p_falha_vidas, p_falha_motivo);
+  end if;
+
+  return v_partida_id;
+end;
+';
+
+COMMENT ON FUNCTION registrar_partida(text, text, dificuldade, resultado_partida, int, modo_jogo, int, int, int, int, text, text, int, text, int, text) IS
+  'Registra uma partida (e a falha, se derrota) usando nomes de mapa, estratégia e bloon. Retorna o id da partida.';
+
+-- EXEMPLOS (rodar um por vez)
+-- Vitória simples:
+-- select registrar_partida('Monkey Meadow', 'Teste - Aéreo Ace e Heli', 'medio', 'vitoria', 60,
+-- p_vidas => 120, p_duracao => 2100, p_jogador => 'eu');
+-- Derrota com a falha registrada:
+-- select registrar_partida('Monkey Meadow', 'Teste - Aéreo Ace e Heli', 'medio', 'derrota', 52,
+-- p_falha_bloon => 'BFB',
+-- p_falha_vidas => 70,
+-- p_falha_motivo => 'BFB sem dano suficiente',
+-- p_jogador => 'eu');
+-- CHIMPS (impopivel, começa no round 6):
+-- select registrar_partida('Logs', 'Teste - Super Monkey CHIMPS', 'impopivel', 'vitoria', 100,
+-- p_modo => 'impopivel_chimps', p_vidas => 1, p_jogador => 'eu');
+-- Depois de registrar partidas novas, atualize o ranking:
+-- select recalcular_recomendacoes();
