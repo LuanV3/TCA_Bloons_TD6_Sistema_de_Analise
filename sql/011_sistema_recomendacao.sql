@@ -51,3 +51,54 @@ begin
   return n;
 end;
 ';
+
+COMMENT ON FUNCTION recalcular_recomendacoes(int, int) IS
+  'Apaga e reconstrói recomendacoes a partir das partidas. Retorna quantas linhas gravou.';
+
+-- 2. VIEW COM NOMES (para ler o ranking sem fazer join)
+
+create or replace view recomendacoes_detalhe as
+select
+  r.mapa_id,
+  m.nome as mapa,
+  r.dificuldade,
+  r.modo,
+  r.posicao_ranking,
+  r.estrategia_id,
+  e.nome as estrategia,
+  h.nome as heroi,
+  r.taxa_vitoria,
+  r.total_partidas,
+  r.round_medio_derrota,
+  r.custo_beneficio,
+  custo_estrategia(r.estrategia_id, r.dificuldade) as custo,
+  r.calculado_em
+from recomendacoes r
+join mapas m       on m.id = r.mapa_id
+join estrategias e on e.id = r.estrategia_id
+left join herois h on h.id = e.heroi_id;
+
+COMMENT ON VIEW recomendacoes_detalhe IS
+  'recomendacoes com nome do mapa, da estratégia e do herói, e o custo na dificuldade do cenário.';
+
+-- 3. RECOMENDAR PARA UM MAPA E DIFICULDADE
+-- Exemplo: select * from recomendar_estrategia('Monkey Meadow', 'medio');
+-- Lê o ranking pré-calculado. Se voltar vazio, ou não há partidas para esse cenário
+-- (com o mínimo usado) ou falta rodar recalcular_recomendacoes().
+
+create or replace function recomendar_estrategia(
+  p_mapa        text,
+  p_dificuldade dificuldade,
+  p_modo        modo_jogo default 'padrao',
+  p_limite      int       default 3
+)
+returns table (
+  posicao_ranking     smallint,
+  estrategia          text,
+  heroi               text,
+  taxa_vitoria        numeric,
+  total_partidas      int,
+  round_medio_derrota numeric,
+  custo               int,
+  custo_beneficio     numeric
+)
