@@ -11,7 +11,7 @@
 -- Obs.: o corpo da função está entre aspas simples; por isso as aspas internas
 -- aparecem duplicadas (''facil'' significa 'facil').
 -- Exemplos:
--- select custo_na_dificuldade(540, 'facil');                 -- 460
+-- select custo_na_dificuldade(540, 'facil');
 -- select nome, custo_na_dificuldade(custo_base, 'impopivel') from torres;
 
 create or replace function custo_na_dificuldade(custo int, d dificuldade)
