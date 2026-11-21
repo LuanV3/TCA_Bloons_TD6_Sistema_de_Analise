@@ -69,3 +69,63 @@ from estrategias e;
 
 COMMENT ON VIEW estrategia_custos IS
   'Custo de cada estratégia nas quatro dificuldades.';
+
+-- upgrades usados em estratégias mas não cadastrados (deve ficar vazia)
+create or replace view estrategia_upgrades_faltando as
+select
+  et.estrategia_id,
+  et.id as estrategia_torre_id,
+  t.nome as torre,
+  c.caminho,
+  n.nivel
+from estrategia_torres et
+join torres t on t.id = et.torre_id
+cross join (values ('caminho_1'::caminho_upgrade), ('caminho_2'), ('caminho_3')) as c(caminho)
+cross join generate_series(1, 5) as n(nivel)
+where n.nivel <= case c.caminho
+                   when 'caminho_1' then et.upgrade_caminho_1
+                   when 'caminho_2' then et.upgrade_caminho_2
+                   when 'caminho_3' then et.upgrade_caminho_3
+                 end
+  and not exists (
+    select 1
+    from upgrades u
+    where u.torre_id = et.torre_id
+      and u.caminho = c.caminho
+      and u.nivel = n.nivel
+  );
+
+COMMENT ON VIEW estrategia_upgrades_faltando IS
+  'Upgrades usados em estratégias que não existem em upgrades. Deve ficar vazia.';
+
+-- grava estrategias.custo_total_estimado (na dificuldade_alvo, ou medio)
+-- p_estrategia_id NULL = todas. Retorna quantas foram atualizadas.
+create or replace function atualizar_custo_estrategias(p_estrategia_id int default null)
+returns int
+language plpgsql
+as '
+declare
+  n int;
+begin
+  update estrategias e
+  set custo_total_estimado = custo_estrategia(e.id)
+  where p_estrategia_id is null or e.id = p_estrategia_id;
+
+  get diagnostics n = row_count;
+  return n;
+end;
+';
+
+COMMENT ON FUNCTION atualizar_custo_estrategias(int) IS
+  'Recalcula estrategias.custo_total_estimado. NULL atualiza todas.';
+
+-- Exemplos
+-- select custo_estrategia(1, 'impopivel');
+-- select * from estrategia_custos order by custo_medio desc;
+-- select * from estrategia_upgrades_faltando;
+-- select atualizar_custo_estrategias();
+-- Teste: 1 Dart Monkey com caminho 1 até o nível 3, no Médio = 860
+-- (200 + 140 + 200 + 320)
+-- from torres where nome = 'Dart Monkey';
+-- select custo_estrategia(currval(pg_get_serial_sequence('estrategias', 'id')));
+-- delete from estrategias where nome = 'teste custo';
