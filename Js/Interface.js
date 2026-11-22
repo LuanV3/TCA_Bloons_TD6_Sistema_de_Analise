@@ -205,3 +205,77 @@ async function carregarPartidas() {
         '<td>' + new Date(p.jogada_em).toLocaleString('pt-BR') + '</td>' +
         '</tr>';
     });
+
+    corpoPartidas.innerHTML = linhas;
+  } catch (erro) {
+    corpoPartidas.innerHTML = '';
+    mostrarMensagem(erro.message, true);
+  }
+}
+
+filtrosPartidas.addEventListener('submit', function (ev) {
+  ev.preventDefault();
+  carregarPartidas();
+});
+
+// RECOMENDAÇÕES
+
+const filtrosRec = pegar('filtros-recomendacoes');
+const corpoRec = pegar('corpo-recomendacoes');
+const formRecalcular = pegar('form-recalcular');
+
+opcoes(filtrosRec.elements.dificuldade, DIFICULDADES, 'Todas as dificuldades');
+opcoes(filtrosRec.elements.modo, MODOS, 'Todos os modos');
+
+async function carregarRecomendacoes() {
+  corpoRec.innerHTML = linhaVazia(9, 'Carregando...');
+  try {
+    const lista = await listarRecomendacoes(
+      filtrosRec.elements.mapa.value,
+      filtrosRec.elements.dificuldade.value,
+      filtrosRec.elements.modo.value
+    );
+    if (lista.length === 0) {
+      corpoRec.innerHTML = linhaVazia(9, 'Nenhuma recomendação. Registre partidas e clique em "Recalcular ranking".');
+      return;
+    }
+    let linhas = '';
+    lista.forEach(function (r) {
+      linhas += '<tr>' +
+        '<td>' + r.posicao_ranking + '</td>' +
+        '<td>' + esc(r.mapa) + ' (' + esc(r.dificuldade) + ', ' + esc(r.modo) + ')</td>' +
+        '<td>' + esc(r.estrategia) + '</td>' +
+        '<td>' + traco(r.heroi) + '</td>' +
+        '<td>' + r.taxa_vitoria + '%</td>' +
+        '<td>' + r.total_partidas + '</td>' +
+        '<td>' + traco(r.round_medio_derrota) + '</td>' +
+        '<td>' + traco(r.custo) + '</td>' +
+        '<td>' + traco(r.custo_beneficio) + '</td>' +
+        '</tr>';
+    });
+    corpoRec.innerHTML = linhas;
+  } catch (erro) {
+    corpoRec.innerHTML = '';
+    mostrarMensagem(erro.message, true);
+  }
+}
+
+filtrosRec.addEventListener('submit', function (ev) {
+  ev.preventDefault();
+  mostrarMensagem('', false);
+  carregarRecomendacoes();
+});
+
+formRecalcular.addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  try {
+    const n = await recalcularRecomendacoes(
+      Number(formRecalcular.elements.minimo.value),
+      Number(formRecalcular.elements.top.value)
+    );
+    mostrarMensagem('Ranking recalculado: ' + n + ' linhas gravadas.', false);
+    carregarRecomendacoes();
+  } catch (erro) {
+    mostrarMensagem(erro.message, true);
+  }
+});
