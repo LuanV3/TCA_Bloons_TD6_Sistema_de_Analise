@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Análise Bloons TD 6</title>
+  <link rel="stylesheet" href="estilo.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header>
+    <h1>Análise Bloons TD 6</h1>
+    <nav aria-label="Principal">
+      <button type="button" data-aba="registrar">Registrar partida</button>
+      <button type="button" data-aba="partidas">Partidas</button>
+      <button type="button" data-aba="recomendacoes">Recomendações</button>
+      <button type="button" data-aba="falhas">Falhas</button>
+    </nav>
+  </header>
+
+  <main>
+    <div id="mensagem" class="mensagem" role="status" hidden></div>
+
+    <section id="aba-registrar" hidden>
+      <h2>Registrar partida</h2>
+      <form id="form-partida">
+        <label>Mapa <select name="mapa" required></select></label>
+        <label>Estratégia <select name="estrategia" required></select></label>
+        <label>Dificuldade <select name="dificuldade"></select></label>
+        <label>Modo <select name="modo"></select></label>
+        <label>Resultado <select name="resultado"></select></label>
+        <label>Round inicial (vazio = padrão da dificuldade) <input name="round_inicial" type="number" min="1"></label>
+        <label>Round final <input name="round_final" type="number" min="1" required></label>
+        <label>Vidas restantes <input name="vidas" type="number" min="0"></label>
+        <label>Dinheiro final <input name="dinheiro" type="number" min="0"></label>
+        <label>Duração (segundos) <input name="duracao" type="number" min="0"></label>
+        <label>Jogador <input name="jogador" maxlength="80"></label>
+        <label>Observações <input name="observacoes"></label>
+        <div id="bloco-falha" class="grupo" hidden>
+          <label>Round da falha (vazio = round final) <input name="falha_round" type="number" min="1"></label>
+          <label>Bloon causador <select name="falha_bloon"></select></label>
+          <label>Vidas perdidas <input name="falha_vidas" type="number" min="0"></label>
+          <label>Motivo <input name="falha_motivo" maxlength="200"></label>
+        </div>
+        <button class="botao" type="submit">Registrar partida</button>
+      </form>
+    </section>
+
+    <section id="aba-partidas" hidden>
+      <h2>Partidas</h2>
+      <form id="filtros-partidas" class="barra">
+        <select name="resultado" aria-label="Filtrar por resultado"></select>
+        <select name="dificuldade" aria-label="Filtrar por dificuldade"></select>
+        <button class="botao" type="submit">Buscar</button>
+      </form>
+      <div class="tabela-wrap"><table>
+        <thead><tr><th>ID</th><th>Mapa</th><th>Estratégia</th><th>Dificuldade</th><th>Modo</th><th>Resultado</th><th>Rounds</th><th>Vidas</th><th>Jogada em</th></tr></thead>
+        <tbody id="corpo-partidas"></tbody>
+      </table></div>
+    </section>
+
+    <section id="aba-recomendacoes" hidden>
+      <h2>Recomendações</h2>
+      <form id="filtros-recomendacoes" class="barra">
+        <select name="mapa" aria-label="Filtrar por mapa"></select>
+        <select name="dificuldade" aria-label="Filtrar por dificuldade"></select>
+        <select name="modo" aria-label="Filtrar por modo"></select>
+        <button class="botao" type="submit">Ver ranking</button>
+      </form>
+      <form id="form-recalcular" class="barra">
+        <label>Mínimo de partidas <input name="minimo" type="number" min="1" value="1"></label>
+        <label>Estratégias por cenário <input name="top" type="number" min="1" value="5"></label>
+        <button class="botao neutro" type="submit">Recalcular ranking</button>
+      </form>
+      <div class="tabela-wrap"><table>
+        <thead><tr><th>Pos.</th><th>Cenário</th><th>Estratégia</th><th>Herói</th><th>Vitória</th><th>Partidas</th><th>Round médio derrota</th><th>Custo</th><th>Custo-benefício</th></tr></thead>
+        <tbody id="corpo-recomendacoes"></tbody>
+      </table></div>
+    </section>
+
+    <section id="aba-falhas" hidden>
+      <h2>Falhas</h2>
+      <h3>Rounds com mais falhas</h3>
+      <div class="tabela-wrap"><table>
+        <thead><tr><th>Round</th><th>Falhas</th><th>Partidas afetadas</th><th>Vidas perdidas</th><th>% das falhas</th></tr></thead>
+        <tbody id="corpo-rounds"></tbody>
+      </table></div>
+      <h3>Bloons que mais causam falha</h3>
+      <div class="tabela-wrap"><table>
+        <thead><tr><th>Bloon</th><th>Falhas</th><th>Partidas afetadas</th><th>Round médio</th><th>Vidas perdidas</th></tr></thead>
+        <tbody id="corpo-bloons"></tbody>
+      </table></div>
+    </section>
+  </main>
+
+  <footer>Projeto não oficial, sem vínculo com a Ninja Kiwi. Bloons TD 6 é marca da Ninja Kiwi.</footer>
+</body>
+</html>
