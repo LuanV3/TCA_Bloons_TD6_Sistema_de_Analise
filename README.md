@@ -33,6 +33,77 @@ Os dados do jogo ficam separados dos dados analíticos.
 | `partida_falhas` | Onde e por que a estratégia falhou em cada partida |
 | `recomendacoes` | Ranking pré-calculado de estratégias por mapa, dificuldade e modo |
 
+## Scripts SQL
+
+Rodar no SQL Editor do Supabase, **na ordem**. Os de dados podem ser rodados mais de uma vez.
+Os corpos das funções ficam entre aspas simples (sem `$$`), por isso as aspas internas aparecem duplicadas.
+
+| Script | O que faz |
+|---|---|
+| `001_criar_tabelas.sql` | Tipos (enums) e tabelas |
+| `002_validacoes.sql` | Regras `CHECK` e `UNIQUE` |
+| `003_dados_torres_e_herois.sql` | Cadastro das torres e dos heróis |
+| `004_funcao_custo_dificuldade.sql` | Função `custo_na_dificuldade` (Fácil, Médio, Difícil, Impopível) |
+| `005_dados_bloons.sql` | Cadastro dos bloons |
+| `006_dados_mapas.sql` | Cadastro dos mapas |
+| `007_dados_upgrades.sql` | Cadastro dos upgrades |
+| `008_funcao_custo_estrategia.sql` | Função `custo_estrategia`, views de custo e de upgrades faltando |
+| `009_dados_teste_estrategias_partidas.sql` | **Dados fictícios** de exemplo: 5 estratégias (nomes começam com `Teste - `) e 35 partidas (jogador `teste`), para testar e demonstrar o sistema |
+| `010_consultas_analise.sql` | Views de análise e a função `ranking_estrategias` |
+| `011_sistema_recomendacao.sql` | `recalcular_recomendacoes`, view `recomendacoes_detalhe` e `recomendar_estrategia` |
+| `012_funcao_registrar_partida.sql` | Função `registrar_partida` (registra partida e falha pelos nomes) |
+
+Os dados do script 009 são **inventados** e servem só como exemplo. Eles não vêm de partidas reais.
+
+Obs.: o arquivo do script 004 precisa se chamar `004_funcao_custo_dificuldade.sql`
+(sem o `__` duplo nem o espaço que ele tem hoje no nome).
+
+### Consultas de análise (script 010)
+
+| Objeto | Responde |
+|---|---|
+| `analise_estrategia_cenario` | Taxa de vitória, round médio e custo-benefício por mapa, dificuldade, modo e estratégia |
+| `analise_estrategia_geral` | Desempenho de cada estratégia somando todos os mapas |
+| `analise_rounds_falha` / `analise_falhas_faixa_round` | Em quais rounds as falhas acontecem |
+| `analise_falhas_por_bloon` | Quais bloons mais furam a defesa |
+| `analise_falhas_por_estrategia` | Round médio de falha comparado ao round alvo |
+| `analise_torres` / `analise_pares_torres` | Taxa de vitória por torre e por par de torres |
+| `ranking_estrategias(mapa, dificuldade, modo, min_partidas)` | Ranking na hora para um cenário |
+
+Partidas abandonadas não entram na taxa de vitória nem nas médias.
+
+### Recomendação (script 011)
+
+A tabela `recomendacoes` é um ranking **pré-calculado**. Ela só muda quando se chama
+`select recalcular_recomendacoes(min_partidas, top);`. Com dados reais, use um mínimo de
+3 partidas por estratégia, para uma vitória em 1 partida não aparecer como 100%.
+
+### Registrar uma partida (script 012)
+
+```sql
+select registrar_partida('Monkey Meadow', 'Teste - Aéreo Ace e Heli', 'medio', 'derrota', 52,
+                         p_falha_bloon => 'BFB',
+                         p_falha_vidas => 70,
+                         p_falha_motivo => 'BFB sem dano suficiente');
+```
+
+## API e interface
+
+A pasta `api/` usa só JavaScript nativo e `fetch`, sem biblioteca.
+
+| Arquivo | Descrição |
+|---|---|
+| `config.js` | URL do projeto e chave publishable do Supabase (preencher) |
+| `api.js` | Funções que chamam a API REST: partidas, análise, ranking e recomendação |
+| `index.html`, `app.js`, `estilo.css` | Interface: registrar partida, listar partidas, recomendações e falhas |
+
+Como usar a interface:
+
+1. Preencha o `config.js`.
+2. Sirva a pasta `api/` com um servidor local (por exemplo, a extensão Live Server do VS Code).
+   Módulos ES não funcionam abrindo o arquivo direto com duplo clique.
+3. Abra `index.html` pelo endereço do servidor.
+
 ## Roadmap
 
 - [x] Modelagem das tabelas de referência
@@ -43,10 +114,12 @@ Os dados do jogo ficam separados dos dados analíticos.
 - [x] Função de custo por dificuldade
 - [x] Cadastro dos mapas e dos bloons
 - [x] Cadastro dos upgrades
-- [ ] Cadastro de estratégias e partidas de teste
-- [ ] Consultas de análise (ranking de estratégias, rounds de falha)
-- [ ] Sistema de recomendação por mapa e dificuldade
-- [ ] Interface para registrar partidas
+- [x] Função de custo de uma estratégia
+- [x] Cadastro de estratégias e partidas de teste
+- [x] Consultas de análise (ranking de estratégias, rounds de falha)
+- [x] Sistema de recomendação por mapa e dificuldade
+- [x] API e interface para registrar partidas
+
 
 ## Aviso
 
