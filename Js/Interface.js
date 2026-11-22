@@ -114,3 +114,94 @@ formPartida.elements.dificuldade.value = 'medio';
 formPartida.elements.resultado.addEventListener('change', function () {
   blocoFalha.hidden = formPartida.elements.resultado.value !== 'derrota';
 });
+
+// Só coloca no objeto os campos preenchidos
+function adicionarNumero(objeto, chave, valor) {
+  if (valor !== '') {
+    objeto[chave] = Number(valor);
+  }
+}
+
+function adicionarTexto(objeto, chave, valor) {
+  valor = valor.trim();
+  if (valor !== '') {
+    objeto[chave] = valor;
+  }
+}
+
+function lerFormPartida() {
+  const e = formPartida.elements;
+  const corpo = {};
+  corpo.p_mapa = e.mapa.value;
+  corpo.p_estrategia = e.estrategia.value;
+  corpo.p_dificuldade = e.dificuldade.value;
+  corpo.p_resultado = e.resultado.value;
+  corpo.p_modo = e.modo.value;
+  adicionarNumero(corpo, 'p_round_final', e.round_final.value);
+  adicionarNumero(corpo, 'p_round_inicial', e.round_inicial.value);
+  adicionarNumero(corpo, 'p_vidas', e.vidas.value);
+  adicionarNumero(corpo, 'p_dinheiro', e.dinheiro.value);
+  adicionarNumero(corpo, 'p_duracao', e.duracao.value);
+  adicionarTexto(corpo, 'p_jogador', e.jogador.value);
+  adicionarTexto(corpo, 'p_observacoes', e.observacoes.value);
+  if (e.resultado.value === 'derrota') {
+    adicionarNumero(corpo, 'p_falha_round', e.falha_round.value);
+    adicionarTexto(corpo, 'p_falha_bloon', e.falha_bloon.value);
+    adicionarNumero(corpo, 'p_falha_vidas', e.falha_vidas.value);
+    adicionarTexto(corpo, 'p_falha_motivo', e.falha_motivo.value);
+  }
+  return corpo;
+}
+
+formPartida.addEventListener('submit', async function (ev) {
+  ev.preventDefault();
+  try {
+    const id = await registrarPartida(lerFormPartida());
+    mostrarMensagem('Partida registrada com o ID ' + id + '.', false);
+    const e = formPartida.elements;
+    e.round_final.value = '';
+    e.vidas.value = '';
+    e.dinheiro.value = '';
+    e.duracao.value = '';
+    e.observacoes.value = '';
+    e.falha_round.value = '';
+    e.falha_vidas.value = '';
+    e.falha_motivo.value = '';
+  } catch (erro) {
+    mostrarMensagem(erro.message, true);
+  }
+});
+
+// PARTIDAS
+
+const filtrosPartidas = pegar('filtros-partidas');
+const corpoPartidas = pegar('corpo-partidas');
+
+opcoes(filtrosPartidas.elements.resultado, RESULTADOS, 'Todos os resultados');
+opcoes(filtrosPartidas.elements.dificuldade, DIFICULDADES, 'Todas as dificuldades');
+
+async function carregarPartidas() {
+  corpoPartidas.innerHTML = linhaVazia(9, 'Carregando...');
+  try {
+    const lista = await listarPartidas(
+      filtrosPartidas.elements.resultado.value,
+      filtrosPartidas.elements.dificuldade.value
+    );
+    if (lista.length === 0) {
+      corpoPartidas.innerHTML = linhaVazia(9, 'Nenhuma partida encontrada.');
+      return;
+    }
+    let linhas = '';
+    lista.forEach(function (p) {
+      linhas += '<tr>' +
+        '<td>' + p.id + '</td>' +
+        '<td>' + esc(p.mapas.nome) + '</td>' +
+        '<td>' + esc(p.estrategias.nome) + '</td>' +
+        '<td>' + esc(p.dificuldade) + '</td>' +
+        '<td>' + esc(p.modo) + '</td>' +
+        '<td>' + esc(p.resultado) + '</td>' +
+        '<td>' + p.round_inicial + ' a ' + p.round_final + '</td>' +
+        '<td>' + traco(p.vidas_restantes) + '</td>' +
+        '<td>' + new Date(p.jogada_em).toLocaleString('pt-BR') + '</td>' +
+        '</tr>';
+    });
