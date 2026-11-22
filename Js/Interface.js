@@ -279,3 +279,57 @@ formRecalcular.addEventListener('submit', async function (ev) {
     mostrarMensagem(erro.message, true);
   }
 });
+
+// FALHAS
+
+async function carregarFalhas() {
+  const corpoRounds = pegar('corpo-rounds');
+  const corpoBloons = pegar('corpo-bloons');
+  corpoRounds.innerHTML = linhaVazia(5, 'Carregando...');
+  corpoBloons.innerHTML = linhaVazia(5, 'Carregando...');
+  try {
+    const rounds = await listarRoundsFalha();
+    const bloons = await listarFalhasPorBloon();
+    let linhas = '';
+    rounds.forEach(function (r) {
+      linhas += '<tr><td>' + r.round_falha + '</td><td>' + r.falhas + '</td><td>' + r.partidas_afetadas +
+        '</td><td>' + traco(r.vidas_perdidas_total) + '</td><td>' + r.percentual_das_falhas + '%</td></tr>';
+    });
+    if (linhas === '') {
+      linhas = linhaVazia(5, 'Nenhuma falha registrada.');
+    }
+    corpoRounds.innerHTML = linhas;
+    linhas = '';
+    bloons.forEach(function (b) {
+      linhas += '<tr><td>' + esc(b.bloon) + '</td><td>' + b.falhas + '</td><td>' + b.partidas_afetadas +
+        '</td><td>' + traco(b.round_medio_falha) + '</td><td>' + traco(b.vidas_perdidas_total) + '</td></tr>';
+    });
+    if (linhas === '') {
+      linhas = linhaVazia(5, 'Nenhuma falha registrada.');
+    }
+    corpoBloons.innerHTML = linhas;
+  } catch (erro) {
+    corpoRounds.innerHTML = '';
+    corpoBloons.innerHTML = '';
+    mostrarMensagem(erro.message, true);
+  }
+}
+
+// INÍCIO
+
+async function iniciar() {
+  try {
+    const mapas = await listarOpcoes('mapas');
+    const estrategias = await listarOpcoes('estrategias');
+    const bloons = await listarOpcoes('bloons');
+    opcoesDaApi(formPartida.elements.mapa, mapas);
+    opcoesDaApi(formPartida.elements.estrategia, estrategias);
+    opcoesDaApi(formPartida.elements.falha_bloon, bloons, '(não informado)');
+    opcoesDaApi(filtrosRec.elements.mapa, mapas, 'Todos os mapas');
+  } catch (erro) {
+    mostrarMensagem(erro.message, true);
+  }
+}
+
+abrirAba('registrar');
+iniciar();
