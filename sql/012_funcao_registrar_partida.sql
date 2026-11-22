@@ -6,6 +6,8 @@
 -- Se o mapa, a estratégia ou o bloon não existir, a função para com erro e não grava nada.
 -- Partida e falha são gravadas na mesma transação: ou entram as duas, ou nenhuma.
 -- Retorna o id da partida criada.
+-- Obs.: a função não usa 'select ... into' nem 'returning ... into'; os valores são
+-- guardados com ':=' (e o id da partida vem de nextval), para evitar erros de execução.
 -- Round inicial: se não informado, usa o padrão da dificuldade
 -- facil 1 | medio 1 | dificil 3 | impopivel 6.
 -- Dados da falha (p_falha_*): só valem para resultado 'derrota'.
@@ -43,12 +45,12 @@ declare
   v_partida_id   bigint;
   v_tem_falha    boolean;
 begin
-  select id into v_mapa_id from mapas where lower(nome) = lower(p_mapa);
+  v_mapa_id := (select id from mapas where lower(nome) = lower(p_mapa));
   if v_mapa_id is null then
     raise exception ''Mapa não encontrado: %'', p_mapa;
   end if;
 
-  select id into v_estrategia_id from estrategias where lower(nome) = lower(p_estrategia);
+  v_estrategia_id := (select id from estrategias where lower(nome) = lower(p_estrategia));
   if v_estrategia_id is null then
     raise exception ''Estratégia não encontrada: %'', p_estrategia;
   end if;
@@ -63,7 +65,7 @@ begin
   end if;
 
   if p_falha_bloon is not null then
-    select id into v_bloon_id from bloons where lower(nome) = lower(p_falha_bloon);
+    v_bloon_id := (select id from bloons where lower(nome) = lower(p_falha_bloon));
     if v_bloon_id is null then
       raise exception ''Bloon não encontrado: %'', p_falha_bloon;
     end if;
@@ -79,15 +81,16 @@ begin
     end
   );
 
+  v_partida_id := nextval(pg_get_serial_sequence(''partidas'', ''id''));
+
   insert into partidas
-    (mapa_id, estrategia_id, dificuldade, modo, resultado,
+    (id, mapa_id, estrategia_id, dificuldade, modo, resultado,
      round_inicial, round_final, vidas_restantes, dinheiro_final,
      duracao_segundos, jogador, observacoes)
   values
-    (v_mapa_id, v_estrategia_id, p_dificuldade, p_modo, p_resultado,
+    (v_partida_id, v_mapa_id, v_estrategia_id, p_dificuldade, p_modo, p_resultado,
      v_round_ini, p_round_final, p_vidas, p_dinheiro,
-     p_duracao, p_jogador, p_observacoes)
-  returning id into v_partida_id;
+     p_duracao, p_jogador, p_observacoes);
 
   if v_tem_falha then
     insert into partida_falhas
