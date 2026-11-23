@@ -189,18 +189,29 @@ opcoes(filtrosPartidas.elements.resultado, RESULTADOS, 'Todos os resultados');
 opcoes(filtrosPartidas.elements.dificuldade, DIFICULDADES, 'Todas as dificuldades');
 
 async function carregarPartidas() {
-  corpoPartidas.innerHTML = linhaVazia(9, 'Carregando...');
+  corpoPartidas.innerHTML = linhaVazia(12, 'Carregando...');
   try {
     const lista = await listarPartidas(
       filtrosPartidas.elements.resultado.value,
       filtrosPartidas.elements.dificuldade.value
     );
     if (lista.length === 0) {
-      corpoPartidas.innerHTML = linhaVazia(9, 'Nenhuma partida encontrada.');
+      corpoPartidas.innerHTML = linhaVazia(12, 'Nenhuma partida encontrada.');
       return;
     }
     let linhas = '';
     lista.forEach(function (p) {
+      const f = p.partida_falhas && p.partida_falhas[0];
+      let falha = '-';
+      if (f) {
+        falha = 'Round ' + f.round_falha;
+        if (f.bloons) {
+          falha += ', ' + f.bloons.nome;
+        }
+        if (f.motivo) {
+          falha += ' - ' + f.motivo;
+        }
+      }
       linhas += '<tr>' +
         '<td>' + p.id + '</td>' +
         '<td>' + esc(p.mapas.nome) + '</td>' +
@@ -211,6 +222,9 @@ async function carregarPartidas() {
         '<td>' + p.round_inicial + ' a ' + p.round_final + '</td>' +
         '<td>' + traco(p.vidas_restantes) + '</td>' +
         '<td>' + new Date(p.jogada_em).toLocaleString('pt-BR') + '</td>' +
+        '<td>' + traco(p.jogador) + '</td>' +
+        '<td class="texto">' + traco(p.observacoes) + '</td>' +
+        '<td class="texto">' + esc(falha) + '</td>' +
         '</tr>';
     });
     corpoPartidas.innerHTML = linhas;

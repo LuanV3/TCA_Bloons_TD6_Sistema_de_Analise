@@ -55,7 +55,7 @@ export async function listarOpcoes(tabela) {
 
 // Partidas com o nome do mapa e da estratégia (filtros opcionais, '' = sem filtro)
 export async function listarPartidas(resultado, dificuldade) {
-  let caminho = 'partidas?select=*,mapas(nome),estrategias(nome)&order=id.desc&limit=100';
+  let caminho = 'partidas?select=*,mapas(nome),estrategias(nome),partida_falhas(round_falha,vidas_perdidas,motivo,bloons(nome))&order=id.desc&limit=100';
   if (resultado !== '') {
     caminho = caminho + '&resultado=eq.' + encodeURIComponent(resultado);
   }

@@ -203,6 +203,7 @@ td { border-bottom: 1px solid #7b4a2440; }
 tbody tr:nth-child(even) { background: #fbf1d6; }
 tbody tr:hover { background: var(--creme-escuro); }
 tbody tr:last-child td { border: 0; }
+td.texto { white-space: normal; min-width: 14rem; }
 
 .res-vitoria { color: var(--ok); font-weight: 700; }
 .res-derrota { color: var(--erro); font-weight: 700; }
