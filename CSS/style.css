@@ -170,3 +170,73 @@ label {
   font-weight: 700;
   color: var(--madeira-escura);
 }
+
+input,
+select {
+  padding: 9px 12px;
+  font: inherit;
+  color: var(--texto);
+  background: white;
+  border: 2px solid var(--madeira-escura);
+  border-radius: 8px;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px #27a8f04d;
+  outline: none;
+}
+
+.tabela-wrap { overflow-x: auto; margin-bottom: 24px; }
+table { width: 100%; border-collapse: collapse; }
+
+th,
+td {
+  padding: 11px 14px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+th { font-size: 0.85rem; background: var(--gradiente-placa); }
+td { border-bottom: 1px solid #7b4a2440; }
+tbody tr:nth-child(even) { background: #fbf1d6; }
+tbody tr:hover { background: var(--creme-escuro); }
+tbody tr:last-child td { border: 0; }
+
+.res-vitoria { color: var(--ok); font-weight: 700; }
+.res-derrota { color: var(--erro); font-weight: 700; }
+.res-abandonada { color: var(--suave); font-weight: 700; }
+
+.mensagem {
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  font-weight: 700;
+  border-color: var(--verde-escuro);
+}
+
+.mensagem.erro { color: var(--erro); border-color: var(--vermelho-escuro); }
+.vazio { padding: 28px; text-align: center; color: var(--suave); }
+[hidden] { display: none !important; }
+
+footer {
+  padding: 18px 16px;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--creme);
+  background: #4a2c14;
+  border-top: 5px solid var(--contorno);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  nav button,
+  .botao { transition: none; }
+}
+
+@media (max-width: 600px) {
+  header { padding: 10px 14px; }
+  .logo { height: 46px; }
+  nav { margin-left: 0; }
+  nav button { padding: 7px 12px; }
+  main { padding: 20px 14px; }
+}
