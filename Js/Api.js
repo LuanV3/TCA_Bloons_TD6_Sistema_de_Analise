@@ -1,6 +1,4 @@
-// Comunicação com a API REST do Supabase usando só fetch (sem biblioteca).
-// Cobre os scripts 001 a 012: tabelas, views de análise e funções (rpc).
-import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
+import { SUPABASE_URL, SUPABASE_KEY } from './Config.js';
 
 const API_URL = SUPABASE_URL + '/rest/v1/';
 

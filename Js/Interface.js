@@ -32,6 +32,14 @@ function traco(valor) {
   return esc(valor);
 }
 
+// Arredonda para número inteiro (round médio não tem vírgula na tela); vazio vira "-"
+function inteiro(valor) {
+  if (valor === null || valor === undefined || valor === '') {
+    return '-';
+  }
+  return Math.round(Number(valor));
+}
+
 function mostrarMensagem(texto, erro) {
   const el = pegar('mensagem');
   el.textContent = texto;
@@ -199,13 +207,12 @@ async function carregarPartidas() {
         '<td>' + esc(p.estrategias.nome) + '</td>' +
         '<td>' + esc(p.dificuldade) + '</td>' +
         '<td>' + esc(p.modo) + '</td>' +
-        '<td>' + esc(p.resultado) + '</td>' +
+        '<td class="res-' + esc(p.resultado) + '">' + esc(p.resultado) + '</td>' +
         '<td>' + p.round_inicial + ' a ' + p.round_final + '</td>' +
         '<td>' + traco(p.vidas_restantes) + '</td>' +
         '<td>' + new Date(p.jogada_em).toLocaleString('pt-BR') + '</td>' +
         '</tr>';
     });
-
     corpoPartidas.innerHTML = linhas;
   } catch (erro) {
     corpoPartidas.innerHTML = '';
@@ -248,7 +255,7 @@ async function carregarRecomendacoes() {
         '<td>' + traco(r.heroi) + '</td>' +
         '<td>' + r.taxa_vitoria + '%</td>' +
         '<td>' + r.total_partidas + '</td>' +
-        '<td>' + traco(r.round_medio_derrota) + '</td>' +
+        '<td>' + inteiro(r.round_medio_derrota) + '</td>' +
         '<td>' + traco(r.custo) + '</td>' +
         '<td>' + traco(r.custo_beneficio) + '</td>' +
         '</tr>';
@@ -302,7 +309,7 @@ async function carregarFalhas() {
     linhas = '';
     bloons.forEach(function (b) {
       linhas += '<tr><td>' + esc(b.bloon) + '</td><td>' + b.falhas + '</td><td>' + b.partidas_afetadas +
-        '</td><td>' + traco(b.round_medio_falha) + '</td><td>' + traco(b.vidas_perdidas_total) + '</td></tr>';
+        '</td><td>' + inteiro(b.round_medio_falha) + '</td><td>' + traco(b.vidas_perdidas_total) + '</td></tr>';
     });
     if (linhas === '') {
       linhas = linhaVazia(5, 'Nenhuma falha registrada.');
