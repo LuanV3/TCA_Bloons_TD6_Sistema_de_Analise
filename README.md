@@ -33,10 +33,6 @@ Os dados do jogo ficam separados dos dados analíticos.
 | `partida_falhas` | Onde e por que a estratégia falhou em cada partida |
 | `recomendacoes` | Ranking pré-calculado de estratégias por mapa, dificuldade e modo |
 
-## Scripts SQL
-
-Rodar no SQL Editor do Supabase, **na ordem**. Os de dados podem ser rodados mais de uma vez.
-Os corpos das funções ficam entre aspas simples (sem `$$`), por isso as aspas internas aparecem duplicadas.
 
 | Script | O que faz |
 |---|---|
@@ -54,9 +50,6 @@ Os corpos das funções ficam entre aspas simples (sem `$$`), por isso as aspas 
 | `012_funcao_registrar_partida.sql` | Função `registrar_partida` (registra partida e falha pelos nomes) |
 
 Os dados do script 009 são **inventados** e servem só como exemplo. Eles não vêm de partidas reais.
-
-Obs.: o arquivo do script 004 precisa se chamar `004_funcao_custo_dificuldade.sql`
-(sem o `__` duplo nem o espaço que ele tem hoje no nome).
 
 ### Consultas de análise (script 010)
 
