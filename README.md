@@ -78,7 +78,7 @@ select registrar_partida('Monkey Meadow', 'Teste - Aéreo Ace e Heli', 'medio', 
                          p_falha_bloon => 'BFB',
                          p_falha_vidas => 70,
                          p_falha_motivo => 'BFB sem dano suficiente');
-```
+``
 
 ## API e interface
 
@@ -89,13 +89,6 @@ A pasta `api/` usa só JavaScript nativo e `fetch`, sem biblioteca.
 | `config.js` | URL do projeto e chave publishable do Supabase (preencher) |
 | `api.js` | Funções que chamam a API REST: partidas, análise, ranking e recomendação |
 | `index.html`, `app.js`, `estilo.css` | Interface: registrar partida, listar partidas, recomendações e falhas |
-
-Como usar a interface:
-
-1. Preencha o `config.js`.
-2. Sirva a pasta `api/` com um servidor local (por exemplo, a extensão Live Server do VS Code).
-   Módulos ES não funcionam abrindo o arquivo direto com duplo clique.
-3. Abra `index.html` pelo endereço do servidor.
 
 ## Roadmap
 
